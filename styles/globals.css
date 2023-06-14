@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 input,
-textarea {
+textarea,
+select {
   @apply border border-gray-200 rounded-sm w-full py-2 px-3;
   @apply mb-2;
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   @apply border-blue-900;
 }
 

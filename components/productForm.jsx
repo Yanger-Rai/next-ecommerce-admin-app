@@ -98,14 +98,14 @@ const ProductForm = ({
                 key={link}
                 className="relative h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200"
               >
-                {/* <img src={link} alt="" className="rounded-lg" /> */}
-                <Image
+                <img src={link} alt="" className="rounded-lg" />
+                {/* <Image
                   src={link}
                   alt="product images"
                   fill
                   sizes="h-24 w-20"
                   className="rounded-lg object-cover"
-                />
+                /> */}
               </div>
             ))}
         </ReactSortable>
