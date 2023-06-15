@@ -2,13 +2,14 @@ import { connectToDB } from "@/utils/mongoose";
 import Categories from "@/models/category";
 
 export const POST = async (request) => {
-  const { name, parentCategory } = await request.json();
+  const { name, parentCategory, properties } = await request.json();
 
   try {
     await connectToDB();
     const categoryDoc = await Categories.create({
       name,
       parent: parentCategory,
+      properties,
     });
 
     return new Response(JSON.stringify(categoryDoc), { status: 200 });

@@ -2,8 +2,7 @@ import { connectToDB } from "@/utils/mongoose";
 import Categories from "@/models/category";
 
 export const PUT = async (request, { params }) => {
-  const { name, parentCategory } = await request.json();
-  console.log("this is the id: ", params.id);
+  const { name, parentCategory, properties } = await request.json();
   try {
     await connectToDB();
     const existingCategory = await Categories.findById(params.id);
@@ -14,9 +13,21 @@ export const PUT = async (request, { params }) => {
 
     existingCategory.name = name;
     existingCategory.parent = parentCategory;
+    existingCategory.properties = properties;
     existingCategory.save();
     return new Response("Category updated successfully", { status: 200 });
   } catch (error) {
     return new Response("Failed to update the category", { status: 500 });
+  }
+};
+
+export const DELETE = async (request, { params }) => {
+  try {
+    await connectToDB();
+    await Categories.findByIdAndRemove(params.id);
+
+    return new Response("category deleted successfully", { status: 200 });
+  } catch (error) {
+    return new Response("Failed to delete the category", { status: 500 });
   }
 };

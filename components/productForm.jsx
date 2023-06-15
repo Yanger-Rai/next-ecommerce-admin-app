@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
@@ -14,13 +14,31 @@ const ProductForm = ({
   description: existingDescription,
   price: existingPrice,
   images: existingImages,
+  category: existingCategory,
+  properties: existingProperties,
 }) => {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
   const [images, setImages] = useState(existingImages || []);
   const [isUploading, setIsUploading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(existingCategory || "");
+  const [productProperties, setProductProperties] = useState(
+    existingProperties || {}
+  );
+
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch("/api/categories");
+      const data = await response.json();
+
+      setCategories(data);
+    };
+    fetchCategories();
+  }, []);
 
   const saveProduct = async (e) => {
     e.preventDefault();
@@ -29,6 +47,8 @@ const ProductForm = ({
       description,
       price,
       images,
+      category,
+      properties: productProperties,
     };
 
     if (_id) {
@@ -76,6 +96,34 @@ const ProductForm = ({
     setImages(images);
   };
 
+  const updateCategory = (e) => {
+    const categoryValue = e.target.value;
+    // const selectedCategory = categories.filter((c) => c._id === categoryValue);
+    setCategory(categoryValue);
+  };
+
+  const setProductProp = (propName, value) => {
+    setProductProperties((prev) => {
+      const newProductProps = { ...prev };
+      newProductProps[propName] = value;
+      return newProductProps;
+    });
+  };
+
+  //Check if the selected category and its parent have any properties
+  const propertiesToFill = [];
+  if (categories.length > 0 && category) {
+    let catInfo = categories.find((cat) => cat._id === category);
+    propertiesToFill.push(...catInfo.properties);
+    while (catInfo?.parent?._id) {
+      const parentCat = categories.find(
+        (cat) => cat._id === catInfo?.parent?._id
+      );
+      propertiesToFill.push(...parentCat.properties);
+      catInfo = parentCat;
+    }
+  }
+
   return (
     <form onSubmit={saveProduct}>
       <label>Product name</label>
@@ -85,6 +133,32 @@ const ProductForm = ({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <label>Category</label>
+      <select value={category} onChange={updateCategory}>
+        <option value="">Uncategorized</option>
+        {categories.length &&
+          categories.map((c) => (
+            <option value={c._id} key={c._id}>
+              {c.name}
+            </option>
+          ))}
+      </select>
+      {propertiesToFill.length > 0 &&
+        propertiesToFill.map((p) => (
+          <div key={p.name} className="flex gap-1">
+            <div>{p.name}</div>
+            <select
+              value={productProperties[p.name]}
+              onChange={(e) => setProductProp(p.name, e.target.value)}
+            >
+              {p.values.map((v) => (
+                <option key={v} value={v}>
+                  {v}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
       <label>Photos</label>
       <div className="mb-2 flex flex-wrap gap-1">
         <ReactSortable

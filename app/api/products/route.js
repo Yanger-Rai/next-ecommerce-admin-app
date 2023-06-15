@@ -2,7 +2,8 @@ import { connectToDB } from "@/utils/mongoose";
 import Product from "@/models/Product";
 
 export const POST = async (request) => {
-  const { title, description, price, images } = await request.json();
+  const { title, description, price, images, category, properties } =
+    await request.json();
   const { method } = request;
   try {
     await connectToDB();
@@ -13,6 +14,8 @@ export const POST = async (request) => {
         description,
         price,
         images,
+        category,
+        properties,
       });
       return new Response("Product created successfully", { status: 200 });
     }
@@ -39,7 +42,8 @@ export const GET = async (request) => {
 
 //PATCH
 export const PATCH = async (request) => {
-  const { _id, title, description, price, images } = await request.json();
+  const { _id, title, description, price, images, category, properties } =
+    await request.json();
   try {
     await connectToDB();
 
@@ -52,6 +56,8 @@ export const PATCH = async (request) => {
     existingProduct.description = description;
     existingProduct.price = price;
     existingProduct.images = images;
+    existingProduct.category = category;
+    existingProduct.properties = properties;
 
     await existingProduct.save();
     return new Response("Product updated successfully", { status: 200 });
