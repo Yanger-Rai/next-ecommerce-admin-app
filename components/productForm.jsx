@@ -145,18 +145,20 @@ const ProductForm = ({
       </select>
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((p) => (
-          <div key={p.name} className="flex gap-1">
-            <div>{p.name}</div>
-            <select
-              value={productProperties[p.name]}
-              onChange={(e) => setProductProp(p.name, e.target.value)}
-            >
-              {p.values.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
+          <div key={p.name}>
+            <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
+            <div>
+              <select
+                value={productProperties[p.name]}
+                onChange={(e) => setProductProp(p.name, e.target.value)}
+              >
+                {p.values.map((v) => (
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         ))}
       <label>Photos</label>
@@ -188,7 +190,7 @@ const ProductForm = ({
             <Spinner />
           </div>
         )}
-        <label className="w-24 h-24 flex items-center justify-center text-sm gap-1 text-gray-500 rounded-lg bg-gray-200 cursor-pointer">
+        <label className="w-24 h-24 flex items-center justify-center text-sm gap-1 text-primary rounded-lg bg-white cursor-pointer border border-primary shadow-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

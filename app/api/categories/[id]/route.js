@@ -12,7 +12,7 @@ export const PUT = async (request, { params }) => {
     }
 
     existingCategory.name = name;
-    existingCategory.parent = parentCategory;
+    existingCategory.parent = parentCategory || undefined;
     existingCategory.properties = properties;
     existingCategory.save();
     return new Response("Category updated successfully", { status: 200 });

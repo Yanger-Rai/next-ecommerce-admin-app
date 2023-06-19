@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import { withSwal } from "react-sweetalert2";
 
 import Layout from "@/components/Layout";
-import { connectToDB } from "@/utils/mongoose";
 
 const Categories = ({ swal }) => {
   const [name, setName] = useState("");
   const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [editedCategory, setEditedCategory] = useState(null);
-  const [properties, setProperties] = useState("");
+  const [properties, setProperties] = useState([]);
 
   useEffect(() => {
     fetchCategories();
@@ -23,6 +22,8 @@ const Categories = ({ swal }) => {
   };
 
   const saveCategory = async (e) => {
+    e.preventDefault();
+
     const data = {
       name,
       parentCategory,
@@ -31,7 +32,6 @@ const Categories = ({ swal }) => {
         values: property.values.split(","),
       })),
     };
-    e.preventDefault();
 
     if (editedCategory) {
       const response = await fetch(`/api/categories/${editedCategory._id}`, {
@@ -56,7 +56,6 @@ const Categories = ({ swal }) => {
   };
 
   const editCategory = (category) => {
-    // setParentCategory("");
     setEditedCategory(category);
     setName(category.name);
     setParentCategory(category.parent?._id);
@@ -226,7 +225,7 @@ const Categories = ({ swal }) => {
                 <td>
                   <button
                     onClick={() => editCategory(category)}
-                    className="btn-primary mr-1"
+                    className="btn-default mr-1"
                   >
                     Edit
                   </button>

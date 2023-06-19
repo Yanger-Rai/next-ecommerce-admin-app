@@ -37,7 +37,10 @@ export const Products = () => {
             <tr key={product._id}>
               <td>{product.title}</td>
               <td>
-                <Link href={`/products/edit/${product._id}`}>
+                <Link
+                  className="btn-default"
+                  href={`/products/edit/${product._id}`}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -55,6 +58,7 @@ export const Products = () => {
                   Edit
                 </Link>
                 <Link
+                  className="btn-red"
                   href={`/products/delete/${product._id}?title=${product.title}`}
                 >
                   <svg
